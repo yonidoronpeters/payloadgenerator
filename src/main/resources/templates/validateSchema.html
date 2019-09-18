@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>EDMX validation</title>
+</head>
+<body>
+<h1>Validate EDMX Schema</h1>
+<form action="#" th:action="@{/validateEdmx}" th:object="${edmxForm}" method="post">
+	<p><textarea th:field="*{edmxSchema}" rows="60" cols="120" spellcheck="false"/></p>
+	<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+</form>
+</body>
+</html>
