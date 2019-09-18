@@ -18,11 +18,14 @@ import org.apache.olingo.odata2.api.exception.ODataException
 import org.apache.olingo.odata2.core.edm.provider.EdmxProvider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.boot.autoconfigure.http.HttpProperties
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartFile
+
+import java.nio.charset.StandardCharsets
 
 @Controller
 class EdmxValidatorController {
@@ -36,11 +39,15 @@ class EdmxValidatorController {
 	}
 
 	@PostMapping('/validateEdmx')
-	def edmxSubmit(EdmxForm edmx, Model model)
-	{
-		def stream = IOUtils.toInputStream(edmx.getEdmxSchema(), HttpProperties.Encoding.DEFAULT_CHARSET)
+	def edmxSubmit(EdmxForm edmx, @RequestParam("file") MultipartFile file, Model model) {
+		LOGGER.debug('Validating schema...')
+		def stream
 		try {
-			LOGGER.debug('Validating schema...')
+			if (file.getSize() > 0) {
+				stream = file.getInputStream()
+			} else {
+				stream = IOUtils.toInputStream(edmx.getEdmxSchema(), StandardCharsets.UTF_8)
+			}
 			new EdmxProvider().parse(stream, true)
 			LOGGER.debug('Schema is valid')
 			'validSchema'

@@ -3,12 +3,27 @@
 <head>
 	<meta charset="UTF-8">
 	<title>EDMX validation</title>
+	<link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+	<script charset="UTF-8"
+			src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/languages/go.min.js"></script>
+	<script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="webjars/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-<h1>Validate EDMX Schema</h1>
-<form action="#" th:action="@{/validateEdmx}" th:object="${edmxForm}" method="post">
-	<p><textarea th:field="*{edmxSchema}" rows="60" cols="120" spellcheck="false"/></p>
-	<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
-</form>
+<div class="text-center">
+	<h1>Validate EDMX Schema</h1>
+	<form action="#" th:action="@{/validateEdmx}" th:object="${edmxForm}" method="post" enctype="multipart/form-data">
+		<p><textarea th:field="*{edmxSchema}" rows="35" cols="70" spellcheck="false"
+					 placeholder="Enter EDMX here" name="edmx"/>
+		</p>
+		<p>
+			<input class="btn btn-outline-secondary" type="file" accept=".edmx,.xml,.txt" name="file">
+		</p>
+		<p>
+			<input class="btn btn-outline-primary" type="submit" value="Submit"/>
+			<input class="btn btn-outline-danger" type="reset" value="Clear"/>
+		</p>
+	</form>
+</div>
 </body>
 </html>
