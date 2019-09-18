@@ -7,8 +7,8 @@
 <body>
 <p>The given schema is invalid :(</p>
 <p style="color: red" th:text="${error.message}" />
-<p><b th:text="${error.cause.message}"/></p>
+<p><b th:if="${error.cause}" th:text="${error.cause.message}"/></p>
 <p>See more details in the log</p>
-<p><a href="/">Try again</a></p>
+<p><a href="javascript:history.back()">Try again</a></p>
 </body>
 </html>
