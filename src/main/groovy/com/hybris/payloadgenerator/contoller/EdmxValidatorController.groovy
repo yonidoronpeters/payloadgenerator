@@ -13,6 +13,7 @@
 package com.hybris.payloadgenerator.contoller
 
 import com.hybris.payloadgenerator.dto.EdmxForm
+import com.hybris.payloadgenerator.service.EntityExtractorService
 import org.apache.commons.io.IOUtils
 import org.apache.olingo.odata2.api.exception.ODataException
 import org.apache.olingo.odata2.core.edm.provider.EdmxProvider
@@ -25,11 +26,16 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 
-import java.nio.charset.StandardCharsets
+import static java.nio.charset.StandardCharsets.UTF_8
 
 @Controller
 class EdmxValidatorController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EdmxValidatorController)
+	private EntityExtractorService entityExtractorService
+
+	EdmxValidatorController(EntityExtractorService entityExtractorService) {
+		this.entityExtractorService = entityExtractorService
+	}
 
 	@GetMapping('/')
 	def validateEdmx(final Model model) {
@@ -46,10 +52,14 @@ class EdmxValidatorController {
 			if (file.getSize() > 0) {
 				stream = file.getInputStream()
 			} else {
-				stream = IOUtils.toInputStream(edmx.getEdmxSchema(), StandardCharsets.UTF_8)
+				stream = IOUtils.toInputStream(edmx.getEdmxSchema(), UTF_8)
 			}
 			new EdmxProvider().parse(stream, true)
 			LOGGER.debug('Schema is valid')
+			stream.reset()
+			def schema = entityExtractorService.extractSchema(stream)
+			// TODO pass in populated Entities instead of just the names
+			model.addAttribute('entityTypes', schema.getEntityNames())
 			'validSchema'
 		} catch (final ODataException e) {
 			LOGGER.error("The EDMX schema is invalid", e)
@@ -57,5 +67,4 @@ class EdmxValidatorController {
 			'invalidSchema'
 		}
 	}
-
 }

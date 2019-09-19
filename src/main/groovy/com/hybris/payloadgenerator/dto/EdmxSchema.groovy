@@ -12,6 +12,18 @@
 
 package com.hybris.payloadgenerator.dto
 
-class EdmxForm {
-	String edmxSchema
+import java.util.stream.Collectors
+
+class EdmxSchema {
+	List<Entity> entityTypes
+
+	EdmxSchema(final List<Entity> entities) {
+		entityTypes = entities
+	}
+
+	List<String> getEntityNames() {
+		entityTypes.stream()
+		.map({ e -> e.name })
+		.collect(Collectors.toList())
+	}
 }

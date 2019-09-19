@@ -10,8 +10,11 @@
  * license agreement you entered into with SAP.
  */
 
-package com.hybris.payloadgenerator.dto
+package com.hybris.payloadgenerator.service
 
-class EdmxForm {
-	String edmxSchema
+
+import com.hybris.payloadgenerator.dto.EdmxSchema
+
+interface EntityExtractorService {
+	EdmxSchema extractSchema(InputStream edmxStream)
 }

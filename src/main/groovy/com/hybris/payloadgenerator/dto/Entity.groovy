@@ -12,6 +12,13 @@
 
 package com.hybris.payloadgenerator.dto
 
-class EdmxForm {
-	String edmxSchema
+class Entity {
+	String name
+	List<Entity> navProperties
+	List<Object> properties
+
+	Entity(String type) {
+		this.name = type
+	}
+
 }
