@@ -58,8 +58,7 @@ class EdmxValidatorController {
 			LOGGER.debug('Schema is valid')
 			stream.reset()
 			def schema = entityExtractorService.extractSchema(stream)
-			// TODO pass in populated Entities instead of just the names
-			model.addAttribute('entityTypes', schema.getEntityNames())
+			model.addAttribute('entityTypes', schema)
 			'validSchema'
 		} catch (final ODataException e) {
 			LOGGER.error("The EDMX schema is invalid", e)

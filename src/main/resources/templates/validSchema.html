@@ -20,7 +20,7 @@
 			Entity Type
 		</button>
 		<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-			<a class="dropdown-item" href="#" th:each="entity : ${entityTypes}" th:text="${entity}"/>
+			<a class="dropdown-item" href="#" th:each="entity : ${entityTypes.entityNames}" th:text="${entity}"/>
 		</div>
 	</div>
 	<!-- TODO Generate Payload here-->

@@ -14,11 +14,41 @@ package com.hybris.payloadgenerator.dto
 
 class Entity {
 	String name
-	List<Entity> navProperties
-	List<Object> properties
+	List<SchemaProperty> navProperties
+	List<SchemaProperty> standardProperties
 
-	Entity(String type) {
-		this.name = type
+	private Entity() {}
+
+	static final class Builder {
+		String name
+		List<SchemaProperty> navProperties
+		List<SchemaProperty> standardProperties
+
+		private Builder() {}
+
+		static Builder anEntity() { return new Builder() }
+
+		Builder withName(String entityName) {
+			name = entityName
+			this
+		}
+
+		 Builder withNavProperties(List<SchemaProperty> navigationProperties) {
+			 navProperties = navigationProperties
+			 this
+		 }
+
+		Builder withProperties(List<SchemaProperty> properties) {
+			standardProperties = properties
+			this
+		}
+
+		Entity build() {
+			Entity entity = new Entity()
+			entity.setName(name)
+			entity.setNavProperties(navProperties)
+			entity.setStandardProperties(standardProperties)
+			entity
+		}
 	}
-
 }
