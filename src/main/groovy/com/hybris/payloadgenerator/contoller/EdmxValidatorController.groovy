@@ -49,11 +49,8 @@ class EdmxValidatorController {
 		LOGGER.debug('Validating schema...')
 		def stream
 		try {
-			if (file.getSize() > 0) {
-				stream = file.getInputStream()
-			} else {
-				stream = IOUtils.toInputStream edmx.getEdmxSchema(), UTF_8
-			}
+			stream = getInputStream(file, edmx)
+			stream.mark(Integer.MAX_VALUE)
 			new EdmxProvider().parse(stream, true)
 			LOGGER.debug('Schema is valid')
 			stream.reset()
@@ -65,5 +62,15 @@ class EdmxValidatorController {
 			model.addAttribute('error', e)
 			'invalidSchema'
 		}
+	}
+
+	private BufferedInputStream getInputStream(MultipartFile file, EdmxForm edmx) {
+		def stream
+		if (file.getSize() > 0) {
+			stream = new BufferedInputStream(file.getInputStream())
+		} else {
+			stream = new BufferedInputStream(IOUtils.toInputStream(edmx.getEdmxSchema(), UTF_8))
+		}
+		stream
 	}
 }
