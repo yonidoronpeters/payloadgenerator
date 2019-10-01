@@ -52,13 +52,13 @@ class EdmxValidatorController {
 			if (file.getSize() > 0) {
 				stream = file.getInputStream()
 			} else {
-				stream = IOUtils.toInputStream(edmx.getEdmxSchema(), UTF_8)
+				stream = IOUtils.toInputStream edmx.getEdmxSchema(), UTF_8
 			}
 			new EdmxProvider().parse(stream, true)
 			LOGGER.debug('Schema is valid')
 			stream.reset()
 			def schema = entityExtractorService.extractSchema(stream)
-			model.addAttribute('entityTypes', schema)
+			model.addAttribute('schema', schema)
 			'validSchema'
 		} catch (final ODataException e) {
 			LOGGER.error("The EDMX schema is invalid", e)

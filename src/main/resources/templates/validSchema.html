@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Generate Payload</title>
 	<link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/webjars/prettify/4-Mar-2013/prettify.css">
 </head>
 <body>
 <div class="container"><br/>
@@ -13,21 +14,63 @@
 	</div>
 </div>
 <div class="container">
-	<div class="dropdown" th:if="${not #lists.isEmpty(entityTypes)}" id="generate-payload">
+	<div class="dropdown" th:if="${not #lists.isEmpty(schema)}" id="generate-payload">
 		<p>Please specify the type you wish to generate a sample payload for:</p>
 		<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
 				aria-haspopup="true" aria-expanded="false">
 			Entity Type
 		</button>
-		<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-			<a class="dropdown-item" href="#" th:each="entity : ${entityTypes.entityNames}" th:text="${entity}"/>
+		<div class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="entity-dropdown">
+			<a class="dropdown-item" href="#" th:each="entity : ${schema.entityNames}" th:text="${entity}"/>
 		</div>
+		<a class="btn btn-outline-dark" type="button" href="javascript:history.back()">Back to EDMX
+		</a>
 	</div>
-	<!-- TODO Generate Payload here-->
+	<br />
+	<div>
+		<button type="button" id="mandatory-fields" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">Include only
+			mandatory attributes
+		</button>
+	</div>
+	<br/>
+	<div>
+		<pre class="prettyprint lang-xml"><code id="payload-value"></code></pre>
+	</div>
 
 	<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 	<script src="/webjars/popper.js/1.15.0/umd/popper.min.js"></script>
 	<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="/webjars/prettify/4-Mar-2013/run_prettify.js?skin=default"></script>
+	<script th:inline="javascript">
+	jQuery(".dropdown-item").click(function(e) {
+		var selected = e.currentTarget.text;
+		if (jQuery("#mandatory-fields").hasClass('active')) {
+			var payloads = [[${schema.typeToSamplePayloadWithOnlyMandatoryFields}]]
+		}
+		else {
+			var payloads = [[${schema.typeToSamplePayload}]]
+		}
+		if (selected != null) {
+			jQuery("#payload-value").text(payloads[selected]);
+		}
+		jQuery("#dropdownMenuButton").text(selected);
+		e.preventDefault()
+	});
+	</script>
+	<script th:inline="javascript">
+	jQuery("#mandatory-fields").click(function() {
+		if (jQuery("#mandatory-fields").hasClass('active')) {
+        	var payloads = [[${schema.typeToSamplePayloadWithOnlyMandatoryFields}]];
+		}
+        else {
+			var payloads = [[${schema.typeToSamplePayload}]];
+		}
+		var selected = jQuery("#dropdownMenuButton").text();
+		jQuery("#payload-value").text(payloads[selected]);
+	});
+	</script>
+<!--	TODO fix stylesheet, fix button for mandatory attrs, text if xml payload works on integration-apis (it doesn't, need to convert to atom/xml) -->
+<!--	https://rometools.github.io/rome/RssAndAtOMUtilitiEsROMEV0.5AndAboveTutorialsAndArticles/RssAndAtOMUtilitiEsROMEV0.5TutorialUsingROMEToCreateAndWriteASyndicationFeed.html-->
 </div>
 </body>
 </html>
